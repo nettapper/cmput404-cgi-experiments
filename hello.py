@@ -6,38 +6,33 @@ from pprint import pprint
 import urlparse
 import sys
 
-print "Content-Type: text/html"
-# print "Content-Type: text/plain"
-# print "Content-Type: application/json"
-print  # Needed to seperate the headers from the body for the http stuff!
 
 eVars = dict(os.environ)
-# params = urlparse.parse_qs(eVars['QUERY_STRING'])
-# userAgent = eVars['HTTP_USER_AGENT']
 contentLength = eVars['CONTENT_LENGTH']
+cookie = eVars['HTTP_COOKIE']
 
 username = 'admin'
 password = '1234'
 
-# pprint(eVars)
-# print("------------")
-# print(json.dumps(eVars))
-# print("------------")
-# print(eVars['QUERY_STRING'])
-# print("------------")
-# print(params)
-# print(userAgent)
-# print("------------")
-# if 'Fireforx' in userAgent:
-#     print("You're using Firefox!")
-# elif 'Chrome' in userAgent:
-#     print("Your're using Chrome!")
-# elif 'curl' in userAgent:
-#     print("Your're using Curl!")
-# else:
-#     print("What you talk'n bout!")
+logged_in = False
 
-if not contentLength:
+if cookie == 'logged-in=True':
+  logged_in = True
+elif contentLength:
+  bytesToRead = int(contentLength)
+  content = sys.stdin.read(bytesToRead)
+  # print "<pre>", content, "</pre>"
+  params = urlparse.parse_qs(content)
+
+  if params['username'][0] == username and params['password'][0] == password:
+    print "Hi,", username
+    print "Set-Cookie: logged-in=True"
+    logged_in = True
+
+# HTTP headers over.
+print ""
+
+if not logged_in:
   print r"""
       <h1> Welcome! </h1>
 
@@ -48,14 +43,6 @@ if not contentLength:
           <button type="submit"> Login! </button>
       </form>
       """
-elif contentLength:
-  bytesToRead = int(contentLength)
-  content = sys.stdin.read(bytesToRead)
-  # print "<pre>", content, "</pre>"
-  params = urlparse.parse_qs(content)
-
-  if params['username'][0] == username and params['password'][0] == password:
-    print "Hi,", username
-  else:
-    print "try again.."
+else:
+  print "Hi,", username
 
