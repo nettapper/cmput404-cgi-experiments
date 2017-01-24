@@ -4,15 +4,17 @@ import os
 import json
 from pprint import pprint
 import urlparse
+import sys
 
 print "Content-Type: text/html"
 # print "Content-Type: text/plain"
 # print "Content-Type: application/json"
 print  # Needed to seperate the headers from the body for the http stuff!
 
-# eVars = dict(os.environ)
+eVars = dict(os.environ)
 # params = urlparse.parse_qs(eVars['QUERY_STRING'])
 # userAgent = eVars['HTTP_USER_AGENT']
+contentLength = eVars['CONTENT_LENGTH']
 
 # pprint(eVars)
 # print("------------")
@@ -42,3 +44,10 @@ print r"""
         <button type="submit"> Login! </button>
     </form>
     """
+
+if contentLength:
+  bytesToRead = int(contentLength)
+
+  content = sys.stdin.read(bytesToRead)
+  print "<pre>", content, "</pre>"
+
