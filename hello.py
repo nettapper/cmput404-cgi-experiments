@@ -4,7 +4,6 @@ import os
 import json
 from pprint import pprint
 import urlparse
-from templates import login_page
 
 print "Content-Type: text/html"
 # print "Content-Type: text/plain"
@@ -33,4 +32,13 @@ print  # Needed to seperate the headers from the body for the http stuff!
 # else:
 #     print("What you talk'n bout!")
 
-print login_page()
+print r"""
+    <h1> Welcome! </h1>
+
+    <form method="POST" action="hello.py">
+        <label> <span>Username:</span> <input autofocus type="text" name="username"></label> <br>
+        <label> <span>Password:</span> <input type="password" name="password"></label>
+
+        <button type="submit"> Login! </button>
+    </form>
+    """
