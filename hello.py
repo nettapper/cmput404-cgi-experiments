@@ -16,7 +16,7 @@ password = '1234'
 
 logged_in = False
 
-if cookie == 'logged-in=True':
+if 'logged-in=True' in cookie:
   logged_in = True
 elif contentLength:
   bytesToRead = int(contentLength)
@@ -30,6 +30,7 @@ elif contentLength:
     logged_in = True
 
 # HTTP headers over.
+print "Contet-Type: text/html"
 print ""
 
 if not logged_in:
